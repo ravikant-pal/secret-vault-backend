@@ -1,10 +1,10 @@
 {
-  "name": "rest",
+  "name": "secret-vault",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "The backend server for secret vault.",
+  "main": "app.js",
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "scripts": {
     "start": "node app.js"
