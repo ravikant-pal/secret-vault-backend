@@ -16,7 +16,7 @@ app.use("/users", usersRoute);
 app.use("/keys", keysRoute);
 app.use("/values", valuesRoute);
 app.get("/", async (req, res) => {
-  res.send("we are on home");
+  res.send({ message: "This is the testing route 🧪🧪" });
 });
 
 // connect to db
