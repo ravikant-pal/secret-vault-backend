@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Key = require("../models/KeySchema");
 const User = require("../models/UserSchema");
+const CryptoJS = require("crypto-js");
 
 router.get("/all/:userId", async (req, res) => {
   try {
@@ -33,8 +34,26 @@ router.post("/new", async (req, res) => {
 
 router.get("/:keyId", async (req, res) => {
   try {
-    const key = await Key.findById(req.params.keyId).populate("values");
-    res.json(key);
+    let key = await Key.findById(req.params.keyId).populate("values");
+    let decriptedValues = key.values.map((val) => {
+      const bytes = CryptoJS.AES.decrypt(val.value, process.env.SECRET_KEY);
+      const originalValue = bytes.toString(CryptoJS.enc.Utf8);
+      return {
+        _id: val._id,
+        value: originalValue,
+        createdAt: val.createdAt,
+        updatedAt: val.updatedAt,
+      };
+    });
+
+    res.json({
+      _id: key._id,
+      name: key.name,
+      is_secret: key.is_secret,
+      values: decriptedValues,
+      createdAt: key.createdAt,
+      updatedAt: key.updatedAt,
+    });
   } catch (err) {
     console.error(err.message);
     res.json({ message: err.message });

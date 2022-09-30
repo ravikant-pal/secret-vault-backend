@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/UserSchema");
-const otpService = require("../services/optService.js");
+const otpService = require("../services/otpService");
 
 router.post("/send-otp", async (req, res) => {
   const otp = otpService.generateOtp();
