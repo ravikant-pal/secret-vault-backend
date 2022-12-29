@@ -2,22 +2,31 @@ const express = require("express");
 var cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-require("dotenv/config");
-const app = express();
-app.use(cors());
-app.use(bodyParser.json());
-
+const coockieParser = require("cookie-parser");
+const verifyJWT = require("./middleware/verifyJWT");
 // Import Routes
 const usersRoute = require("./routes/users");
 const keysRoute = require("./routes/keys");
 const valuesRoute = require("./routes/values");
+const credentials = require("./middleware/credentials");
+const corsOptions = require("./config/corsOptions");
+require("dotenv/config");
+
+const PORT = process.env.PORT || 3000;
+
+const app = express();
+app.use(credentials);
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use(coockieParser());
 
 app.use("/users", usersRoute);
-app.use("/keys", keysRoute);
-app.use("/values", valuesRoute);
 app.get("/", async (req, res) => {
   res.send({ message: "This is the testing route 🧪🧪" });
 });
+app.use(verifyJWT);
+app.use("/keys", keysRoute);
+app.use("/values", valuesRoute);
 
 // connect to db
 mongoose
@@ -29,8 +38,4 @@ mongoose
     console.log("No connection", error);
   });
 
-app.listen(3001);
-
-// mongo db atlas crad
-// email => rorehe8611@ovout.com
-// password => w4J3ndDLLYmaH8w
+app.listen(PORT);
