@@ -1,7 +1,7 @@
 const allowedOrigins = [
   "https://secret-vault.netlify.app",
-  "https://127.0.0:3001",
-  "https://localhost:3001",
+  "http://127.0.0:3000",
+  "http://localhost:3000",
 ];
 
 module.exports = allowedOrigins;

@@ -38,4 +38,6 @@ mongoose
     console.log("No connection", error);
   });
 
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.info("App is running on :", PORT);
+});

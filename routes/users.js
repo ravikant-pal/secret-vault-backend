@@ -9,7 +9,6 @@ router.post("/send-otp", async (req, res) => {
   const otp = otpService.generateOtp();
   let user;
   User.findOne({ email: req.body.email }, async (err, dbUser) => {
-    console.log("error : ", err, "Db user : ", dbUser);
     if (dbUser) {
       await User.updateOne(
         { _id: dbUser._id },
@@ -49,19 +48,19 @@ router.post("/verify-otp", async (req, res) => {
   if (expirationTime && user.otp === req.body.otp) {
     // create JWT
     const accessToken = jwt.sign(
-      { username: user?.email },
+      { userId: user._id },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "30s" }
     );
     const refreshToken = jwt.sign(
-      { username: user?.email },
+      { userId: user._id },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "1d" }
     );
     // Saving Refresh token with IP address to current user
     await User.updateOne(
       { _id: user._id },
-      { $set: { ip: req.body.ip, otp: "", refreshToken } }
+      { $set: { refreshToken } }
     );
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
@@ -69,13 +68,13 @@ router.post("/verify-otp", async (req, res) => {
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.json({ ip: req.body.ip, verified: true, accessToken });
+    res.json({verified: true, accessToken });
   } else {
     res.status(400).json({ message: "Not a valid Otp" });
   }
 });
 
-router.get("/refresh-token", async (req, res) => {
+router.get("/refresh", async (req, res) => {
   const coockie = req.cookies;
   if (!coockie?.jwt) return res.sendStatus(401);
   const refreshToken = coockie.jwt;
@@ -83,9 +82,10 @@ router.get("/refresh-token", async (req, res) => {
   if (!user) return res.sendStatus(403); //forbidden
 
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-    if (err || user.email !== decoded.username) return res.sendStatus(403);
+    if (err || user?._id?.toString() !== decoded.userId)
+      return res.sendStatus(403);
     const accessToken = jwt.sign(
-      { username: decoded.username },
+      { userId: decoded.userId },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "30s" }
     );

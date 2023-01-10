@@ -44,20 +44,17 @@ router.delete("/:keyId/:valueId", async (req, res) => {
 });
 
 router.get("/test", async (req, res) => {
-  console.log("Secret key : ", process.env.SECRET_KEY);
   // Encrypt
   var ciphertext = CryptoJS.AES.encrypt(
     "my message",
     process.env.SECRET_KEY
   ).toString();
 
-  console.log("chipher : ", ciphertext);
 
   // Decrypt
   var bytes = CryptoJS.AES.decrypt(ciphertext, process.env.SECRET_KEY);
   var originalText = bytes.toString(CryptoJS.enc.Utf8);
 
-  console.log("original: ", originalText);
   res.json(originalText);
 });
 
