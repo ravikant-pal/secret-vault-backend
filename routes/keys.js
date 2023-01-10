@@ -19,7 +19,6 @@ router.get("/all/:userId", async (req, res) => {
 router.post("/new", async (req, res) => {
   try {
     const user = await User.findById(req.body.userId).populate("keys");
-    console.log(user);
     const savedkey = await Key.create({
       name: req.body.name,
     });

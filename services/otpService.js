@@ -46,7 +46,6 @@ module.exports = {
       upperCaseAlphabets: false,
       specialChars: false,
     });
-    console.log("OTP => ", otp);
     return otp;
   },
 };
