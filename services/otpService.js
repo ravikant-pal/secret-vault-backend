@@ -28,7 +28,7 @@ module.exports = {
     });
     request
       .then((result) => {
-        console.log(result.body);
+        console.debug(result.body);
       })
       .catch((err) => {
         console.log(err.statusCode);
@@ -46,7 +46,6 @@ module.exports = {
       upperCaseAlphabets: false,
       specialChars: false,
     });
-    console.log("OTP => ", otp);
     return otp;
   },
 };

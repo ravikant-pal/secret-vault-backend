@@ -7,19 +7,24 @@
     "node": "16.x"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "Ravikant Pal",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
     "dotenv": "^16.0.0",
     "express": "^4.18.1",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.3.2",
     "node-mailjet": "^3.4.1",
-    "nodemon": "^2.0.16",
     "otp-generator": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }
