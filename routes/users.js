@@ -50,25 +50,22 @@ router.post("/verify-otp", async (req, res) => {
     const accessToken = jwt.sign(
       { userId: user._id },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "30s" }
+      { expiresIn: "1d" }
     );
     const refreshToken = jwt.sign(
       { userId: user._id },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "6d" }
     );
     // Saving Refresh token with IP address to current user
-    await User.updateOne(
-      { _id: user._id },
-      { $set: { refreshToken } }
-    );
+    await User.updateOne({ _id: user._id }, { $set: { refreshToken } });
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       sameSite: "none",
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.json({verified: true, accessToken });
+    res.json({ verified: true, accessToken });
   } else {
     res.status(400).json({ message: "Not a valid Otp" });
   }
